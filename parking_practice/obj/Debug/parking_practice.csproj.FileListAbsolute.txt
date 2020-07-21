@@ -1,0 +1,10 @@
+C:\Users\user\Source\Repos\parking_practice\parking_practice\bin\Debug\parking_practice.exe.config
+C:\Users\user\Source\Repos\parking_practice\parking_practice\bin\Debug\parking_practice.exe
+C:\Users\user\Source\Repos\parking_practice\parking_practice\bin\Debug\parking_practice.pdb
+C:\Users\user\Source\Repos\parking_practice\parking_practice\obj\Debug\parking_practice.csprojAssemblyReference.cache
+C:\Users\user\Source\Repos\parking_practice\parking_practice\obj\Debug\parking_practice.csproj.CoreCompileInputs.cache
+C:\Users\user\Source\Repos\parking_practice\parking_practice\obj\Debug\parking_practice.exe
+C:\Users\user\Source\Repos\parking_practice\parking_practice\obj\Debug\parking_practice.pdb
+C:\Users\user\Source\Repos\parking_practice\parking_practice\bin\Debug\Newtonsoft.Json.dll
+C:\Users\user\Source\Repos\parking_practice\parking_practice\bin\Debug\Newtonsoft.Json.xml
+C:\Users\user\Source\Repos\parking_practice\parking_practice\obj\Debug\parking_practice.csproj.CopyComplete
