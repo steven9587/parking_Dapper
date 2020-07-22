@@ -13,8 +13,9 @@ namespace parking_practice
         static async Task Main(string[] args)
         {
             //讀取原本DB資料   
-            List<float> DBlatitude = new List<float>();
-            List<float> DBlongitude = new List<float>();
+            //List<float> DBlatitude = new List<float>();
+            //List<float> DBlongitude = new List<float>();
+            List<Location> location = new List<Location>();
             SqlConnection conn = new SqlConnection("data source=LAPTOP-9CB9PVPB\\SQLEXPRESS; initial catalog = SYSTEX; user id = sa; password = 0000");
             conn.Open();
             string strSelect = "SELECT latitude,longitude FROM parking";
@@ -24,10 +25,11 @@ namespace parking_practice
             {
                 while (dr.Read())
                 {
-                    DBlatitude.Add((float)Convert.ToDouble(dr[0]));
-                    DBlongitude.Add((float)Convert.ToDouble(dr[1]));
+                    //將所讀取到的經度&緯度存入list中
+                    //DBlatitude.Add((float)Convert.ToDouble(dr[0]));
+                    //DBlongitude.Add((float)Convert.ToDouble(dr[1]));
+                    location.Add(new Location() { Latitude = (float)Convert.ToDouble(dr[0]), Longitude = (float)Convert.ToDouble(dr[1]) });
                 }
-
             }
             finally
             {
@@ -61,17 +63,24 @@ namespace parking_practice
 
                     //判斷資料庫是否有該筆資料(經度、緯度)
                     Boolean exist = false;
-                    foreach (float a in DBlatitude)//針對緯度檢查
+                    //foreach (float a in DBlatitude)//針對緯度檢查
+                    //{
+                    //    if (latitude == a)
+                    //    {
+                    //        foreach (float b in DBlongitude)//針對經度檢查
+                    //        {
+                    //            if (b == longitude)
+                    //            {
+                    //                exist = true;//經度&緯度都相等 => 該筆資料庫資料已存在
+                    //            }
+                    //        }
+                    //    }
+                    //}
+                    foreach (var loc in location)
                     {
-                        if (latitude == a)
+                        if (latitude == loc.Latitude && longitude == loc.Longitude)
                         {
-                            foreach (float b in DBlongitude)//針對經度檢查
-                            {
-                                if (b == longitude)
-                                {
-                                    exist = true;//經度&緯度都相等 => 該筆資料庫資料已存在
-                                }
-                            }
+                            exist = true;
                         }
                     }
 
@@ -122,9 +131,9 @@ namespace parking_practice
                         cmd.Parameters.AddWithValue("@updateTime", time);
                         cmd.ExecuteNonQuery();
                     }
-                    catch
+                    catch (SqlException e)
                     {
-                        Console.WriteLine("該地點已有停車場!!!");
+                        Console.WriteLine(e.Message);
                     }
                     finally
                     {
