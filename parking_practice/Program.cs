@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -38,23 +37,40 @@ namespace parking_practice
             //讀取線上即時資料
             for (int i = 0; i < 2; i++)
             {
+                conn = new SqlConnection("data source=LAPTOP-9CB9PVPB\\SQLEXPRESS; initial catalog = SYSTEX; user id = sa; password = 0000");
+                conn.Open();
                 var temp = await GetRequest("https://data.ntpc.gov.tw/api/datasets/B1464EF0-9C7C-4A6F-ABF7-6BDF32847E68/json?page=" + i + "&size=1000");
                 //將一大串json字串切割成一筆一筆的
-                JArray jsondata = JsonConvert.DeserializeObject<JArray>(temp);
-                foreach (JObject data in jsondata)
+                Console.WriteLine(temp);
+                List<Park> parkdata = JsonConvert.DeserializeObject<List<Park>>(temp);
+                //JArray jsondata = JsonConvert.DeserializeObject<JArray>(temp);
+                //foreach (JObject data in jsondata)
+                foreach (var data in parkdata)
                 {
-                    float latitude = (float)data["twd97X"]; //停車場緯度
-                    float longitude = (float)data["twd97Y"]; //停車場經度
-                    string name = (string)data["name"];//停車場名稱
-                    string area = (string)data["area"];//停車場所在區域
-                    string address = (string)data["address"];//停車場地址
-                    string serviceTime = (string)data["serviceTime"];//停車場服務時間
-                    string payEx = (string)data["payEx"];//停車場收費資訊
-                    string totalCar = (string)data["totalCar"];//汽車停車格總數
-                    string totalMotor = (string)data["totalMotor"];//機車停車格總數
-                    string summary = (string)data["summary"];//停車場基本描述
-                    string id = (string)data["id"];//停車場唯一ID
-                    string tel = (string)data["tel"]; //停車場連絡電話
+                    //float latitude = (float)data["twd97X"]; //停車場緯度
+                    float latitude = data.Twd97X;
+                    //float longitude = (float)data["twd97Y"]; //停車場經度
+                    float longitude = data.Twd97Y;
+                    //string name = (string)data["name"];//停車場名稱
+                    string name = data.Name;
+                    //string area = (string)data["area"];//停車場所在區域
+                    string area = data.Area;
+                    //string address = (string)data["address"];//停車場地址
+                    string address = data.Address;
+                    //string serviceTime = (string)data["serviceTime"];//停車場服務時間
+                    string serviceTime = data.ServiceTime;
+                    //string payEx = (string)data["payEx"];//停車場收費資訊
+                    string payEx = data.PayEx;
+                    //string totalCar = (string)data["totalCar"];//汽車停車格總數
+                    string totalCar = data.TotalCar;
+                    //string totalMotor = (string)data["totalMotor"];//機車停車格總數
+                    string totalMotor = data.TotalMotor;
+                    //string summary = (string)data["summary"];//停車場基本描述
+                    string summary = data.Summary;
+                    //string id = (string)data["id"];//停車場唯一ID
+                    string id = data.Id;
+                    //string tel = (string)data["tel"]; //停車場連絡電話
+                    string tel = data.Tel;
                     string time = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");//資料更新時間
                     Console.WriteLine("停車場緯度:" + latitude + " " + "停車場經度:" + longitude + " " + "停車場名稱:" + name + " " + "停車場所在區域:" + area + " " +
                         "停車場地址:" + address + " " + "停車場服務時間:" + serviceTime + " " + "停車場收費資訊:" + payEx + " " + "汽車停車格總數:" + totalCar + " " +
@@ -85,8 +101,8 @@ namespace parking_practice
                     }
 
                     //將該筆資料放入DB中(更新or新增)
-                    conn = new SqlConnection("data source=LAPTOP-9CB9PVPB\\SQLEXPRESS; initial catalog = SYSTEX; user id = sa; password = 0000");
-                    conn.Open();
+                    //conn = new SqlConnection("data source=LAPTOP-9CB9PVPB\\SQLEXPRESS; initial catalog = SYSTEX; user id = sa; password = 0000");
+                    //conn.Open();
                     if (exist)
                     {
                         //資料已存在 => 更新
@@ -139,9 +155,10 @@ namespace parking_practice
                     {
                         cmd.Cancel();
                     }
-                    conn.Close();
+                    //conn.Close();
                 }
                 Console.WriteLine("======================================================================================================================");
+                conn.Close();
             }
             Console.ReadKey();
         }
