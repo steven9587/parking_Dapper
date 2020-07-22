@@ -122,6 +122,10 @@ namespace parking_practice
                         cmd.Parameters.AddWithValue("@updateTime", time);
                         cmd.ExecuteNonQuery();
                     }
+                    catch
+                    {
+                        Console.WriteLine("該地點已有停車場!!!");
+                    }
                     finally
                     {
                         cmd.Cancel();
