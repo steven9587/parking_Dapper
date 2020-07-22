@@ -2,13 +2,8 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Net.Cache;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace parking_practice
@@ -63,6 +58,7 @@ namespace parking_practice
                         "停車場地址:" + address + " " + "停車場服務時間:" + serviceTime + " " + "停車場收費資訊:" + payEx + " " + "汽車停車格總數:" + totalCar + " " +
                         "機車停車格總數:" + totalMotor + " " + "停車場基本描述:" + summary + " " + "停車場唯一ID:" + id + " " + "停車場連絡電話:" + tel + " " +
                         "資料更新時間:" + time);
+
                     //判斷資料庫是否有該筆資料(經度、緯度)
                     Boolean exist = false;
                     foreach (float a in DBlatitude)//針對緯度檢查
@@ -73,7 +69,7 @@ namespace parking_practice
                             {
                                 if (b == longitude)
                                 {
-                                    exist = true;//經度緯度都相等 => 該筆資料庫資料已存在
+                                    exist = true;//經度&緯度都相等 => 該筆資料庫資料已存在
                                 }
                             }
                         }
@@ -137,6 +133,7 @@ namespace parking_practice
             Console.ReadKey();
         }
 
+        //讀取swagger上的Opendata(非同步)
         private static async Task<string> GetRequest(string url)
         {
             string mycontent = string.Empty;
