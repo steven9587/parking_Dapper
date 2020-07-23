@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30309.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "parking_practice", "parking_practice\parking_practice.csproj", "{D11CF8EE-5668-4398-AB46-6D78EB2DCE5B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "parking_api", "parking_api\parking_api.csproj", "{1F2CBB6E-1D85-4CDC-A5DB-FA5E32FECFCE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{D11CF8EE-5668-4398-AB46-6D78EB2DCE5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D11CF8EE-5668-4398-AB46-6D78EB2DCE5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D11CF8EE-5668-4398-AB46-6D78EB2DCE5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F2CBB6E-1D85-4CDC-A5DB-FA5E32FECFCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F2CBB6E-1D85-4CDC-A5DB-FA5E32FECFCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F2CBB6E-1D85-4CDC-A5DB-FA5E32FECFCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F2CBB6E-1D85-4CDC-A5DB-FA5E32FECFCE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
