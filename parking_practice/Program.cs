@@ -12,8 +12,6 @@ namespace parking_practice
         static async Task Main(string[] args)
         {
             //讀取原本DB資料   
-            //List<float> DBlatitude = new List<float>();
-            //List<float> DBlongitude = new List<float>();
             List<Location> location = new List<Location>();
             SqlConnection conn = new SqlConnection("data source=LAPTOP-9CB9PVPB\\SQLEXPRESS; initial catalog = SYSTEX; user id = sa; password = 0000");
             conn.Open();
@@ -25,8 +23,6 @@ namespace parking_practice
                 while (dr.Read())
                 {
                     //將所讀取到的經度&緯度存入list中
-                    //DBlatitude.Add((float)Convert.ToDouble(dr[0]));
-                    //DBlongitude.Add((float)Convert.ToDouble(dr[1]));
                     location.Add(new Location() { Latitude = (float)Convert.ToDouble(dr[0]), Longitude = (float)Convert.ToDouble(dr[1]) });
                 }
             }
@@ -43,33 +39,19 @@ namespace parking_practice
                 //將一大串json字串切割成一筆一筆的
                 Console.WriteLine(temp);
                 List<Park> parkdata = JsonConvert.DeserializeObject<List<Park>>(temp);
-                //JArray jsondata = JsonConvert.DeserializeObject<JArray>(temp);
-                //foreach (JObject data in jsondata)
                 foreach (var data in parkdata)
                 {
-                    //float latitude = (float)data["twd97X"]; //停車場緯度
-                    float latitude = data.Twd97X;
-                    //float longitude = (float)data["twd97Y"]; //停車場經度
-                    float longitude = data.Twd97Y;
-                    //string name = (string)data["name"];//停車場名稱
+                    float latitude = Convert.ToSingle(Cal_TWD97_To_lonlat(data.Twd97X, data.Twd97Y, "lat"));
+                    float longitude = Convert.ToSingle(Cal_TWD97_To_lonlat(data.Twd97X, data.Twd97Y, "lon"));
                     string name = data.Name;
-                    //string area = (string)data["area"];//停車場所在區域
                     string area = data.Area;
-                    //string address = (string)data["address"];//停車場地址
                     string address = data.Address;
-                    //string serviceTime = (string)data["serviceTime"];//停車場服務時間
                     string serviceTime = data.ServiceTime;
-                    //string payEx = (string)data["payEx"];//停車場收費資訊
                     string payEx = data.PayEx;
-                    //string totalCar = (string)data["totalCar"];//汽車停車格總數
                     string totalCar = data.TotalCar;
-                    //string totalMotor = (string)data["totalMotor"];//機車停車格總數
                     string totalMotor = data.TotalMotor;
-                    //string summary = (string)data["summary"];//停車場基本描述
                     string summary = data.Summary;
-                    //string id = (string)data["id"];//停車場唯一ID
                     string id = data.Id;
-                    //string tel = (string)data["tel"]; //停車場連絡電話
                     string tel = data.Tel;
                     string time = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");//資料更新時間
                     Console.WriteLine("停車場緯度:" + latitude + " " + "停車場經度:" + longitude + " " + "停車場名稱:" + name + " " + "停車場所在區域:" + area + " " +
@@ -79,19 +61,6 @@ namespace parking_practice
 
                     //判斷資料庫是否有該筆資料(經度、緯度)
                     Boolean exist = false;
-                    //foreach (float a in DBlatitude)//針對緯度檢查
-                    //{
-                    //    if (latitude == a)
-                    //    {
-                    //        foreach (float b in DBlongitude)//針對經度檢查
-                    //        {
-                    //            if (b == longitude)
-                    //            {
-                    //                exist = true;//經度&緯度都相等 => 該筆資料庫資料已存在
-                    //            }
-                    //        }
-                    //    }
-                    //}
                     foreach (var loc in location)
                     {
                         if (latitude == loc.Latitude && longitude == loc.Longitude)
@@ -101,8 +70,6 @@ namespace parking_practice
                     }
 
                     //將該筆資料放入DB中(更新or新增)
-                    //conn = new SqlConnection("data source=LAPTOP-9CB9PVPB\\SQLEXPRESS; initial catalog = SYSTEX; user id = sa; password = 0000");
-                    //conn.Open();
                     if (exist)
                     {
                         //資料已存在 => 更新
@@ -155,7 +122,6 @@ namespace parking_practice
                     {
                         cmd.Cancel();
                     }
-                    //conn.Close();
                 }
                 Console.WriteLine("======================================================================================================================");
                 conn.Close();
@@ -178,6 +144,70 @@ namespace parking_practice
                 }
             }
             return mycontent;
+        }
+
+        //TWD97坐標轉WGS84
+        private static string Cal_TWD97_To_lonlat(double x, double y, string back)
+        {
+            double a = 6378137.0;
+            double b = 6356752.314245;
+            double k0 = 0.9999;
+            int dx = 250000;
+            double dy = 0;
+            double lon0 = 121 * Math.PI / 180;
+            double e = Math.Pow((1 - Math.Pow(b, 2) / Math.Pow(a, 2)), 0.5);
+
+            x -= dx;
+            y -= dy;
+
+            // Calculate the Meridional Arc
+            double M = y / k0;
+
+            // Calculate Footprint Latitude
+            double mu = M / (a * (1.0 - Math.Pow(e, 2) / 4.0 - 3 * Math.Pow(e, 4) / 64.0 - 5 * Math.Pow(e, 6) / 256.0));
+            double e1 = (1.0 - Math.Pow((1.0 - Math.Pow(e, 2)), 0.5)) / (1.0 + Math.Pow((1.0 - Math.Pow(e, 2)), 0.5));
+
+            double J1 = (3 * e1 / 2 - 27 * Math.Pow(e1, 3) / 32.0);
+            double J2 = (21 * Math.Pow(e1, 2) / 16 - 55 * Math.Pow(e1, 4) / 32.0);
+            double J3 = (151 * Math.Pow(e1, 3) / 96.0);
+            double J4 = (1097 * Math.Pow(e1, 4) / 512.0);
+
+            double fp = mu + J1 * Math.Sin(2 * mu) + J2 * Math.Sin(4 * mu) + J3 * Math.Sin(6 * mu) + J4 * Math.Sin(8 * mu);
+
+            // Calculate Latitude and Longitude
+
+            double e2 = Math.Pow((e * a / b), 2);
+            double C1 = Math.Pow(e2 * Math.Cos(fp), 2);
+            double T1 = Math.Pow(Math.Tan(fp), 2);
+            double R1 = a * (1 - Math.Pow(e, 2)) / Math.Pow((1 - Math.Pow(e, 2) * Math.Pow(Math.Sin(fp), 2)), (3.0 / 2.0));
+            double N1 = a / Math.Pow((1 - Math.Pow(e, 2) * Math.Pow(Math.Sin(fp), 2)), 0.5);
+
+            double D = x / (N1 * k0);
+
+            // 計算緯度
+            double Q1 = N1 * Math.Tan(fp) / R1;
+            double Q2 = (Math.Pow(D, 2) / 2.0);
+            double Q3 = (5 + 3 * T1 + 10 * C1 - 4 * Math.Pow(C1, 2) - 9 * e2) * Math.Pow(D, 4) / 24.0;
+            double Q4 = (61 + 90 * T1 + 298 * C1 + 45 * Math.Pow(T1, 2) - 3 * Math.Pow(C1, 2) - 252 * e2) * Math.Pow(D, 6) / 720.0;
+            double lat = fp - Q1 * (Q2 - Q3 + Q4);
+
+            // 計算經度
+            double Q5 = D;
+            double Q6 = (1 + 2 * T1 + C1) * Math.Pow(D, 3) / 6;
+            double Q7 = (5 - 2 * C1 + 28 * T1 - 3 * Math.Pow(C1, 2) + 8 * e2 + 24 * Math.Pow(T1, 2)) * Math.Pow(D, 5) / 120.0;
+            double lon = lon0 + (Q5 - Q6 + Q7) / Math.Cos(fp);
+
+            lat = (lat * 180) / Math.PI; //緯
+            lon = (lon * 180) / Math.PI; //經
+
+            if (back == "lon")
+            {
+                return lon.ToString();
+            }
+            else
+            {
+                return lat.ToString();
+            }
         }
     }
 }
