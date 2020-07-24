@@ -1,0 +1,6 @@
+C:\Users\user\Source\Repos\parking_practice\parking_lib\obj\Debug\parking_lib.csprojAssemblyReference.cache
+C:\Users\user\Source\Repos\parking_practice\parking_lib\obj\Debug\parking_lib.csproj.CoreCompileInputs.cache
+C:\Users\user\Source\Repos\parking_practice\parking_lib\bin\Debug\parking_lib.dll
+C:\Users\user\Source\Repos\parking_practice\parking_lib\bin\Debug\parking_lib.pdb
+C:\Users\user\Source\Repos\parking_practice\parking_lib\obj\Debug\parking_lib.dll
+C:\Users\user\Source\Repos\parking_practice\parking_lib\obj\Debug\parking_lib.pdb

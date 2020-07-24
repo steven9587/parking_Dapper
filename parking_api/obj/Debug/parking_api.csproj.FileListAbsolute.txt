@@ -93,3 +93,5 @@ C:\Users\user\Source\Repos\parking_practice\parking_api\obj\Debug\parking_api.cs
 C:\Users\user\Source\Repos\parking_practice\parking_api\obj\Debug\parking_api.csproj.CopyComplete
 C:\Users\user\Source\Repos\parking_practice\parking_api\obj\Debug\parking_api.dll
 C:\Users\user\Source\Repos\parking_practice\parking_api\obj\Debug\parking_api.pdb
+C:\Users\user\Source\Repos\parking_practice\parking_api\bin\parking_lib.dll
+C:\Users\user\Source\Repos\parking_practice\parking_api\bin\parking_lib.pdb

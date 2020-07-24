@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "parking_practice", "parking
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "parking_api", "parking_api\parking_api.csproj", "{1F2CBB6E-1D85-4CDC-A5DB-FA5E32FECFCE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "parking_lib", "parking_lib\parking_lib.csproj", "{6B3723BB-FA6E-4DA0-A72A-07BAA2BF83F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{1F2CBB6E-1D85-4CDC-A5DB-FA5E32FECFCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F2CBB6E-1D85-4CDC-A5DB-FA5E32FECFCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F2CBB6E-1D85-4CDC-A5DB-FA5E32FECFCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B3723BB-FA6E-4DA0-A72A-07BAA2BF83F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B3723BB-FA6E-4DA0-A72A-07BAA2BF83F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B3723BB-FA6E-4DA0-A72A-07BAA2BF83F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B3723BB-FA6E-4DA0-A72A-07BAA2BF83F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

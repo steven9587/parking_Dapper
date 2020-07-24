@@ -1,4 +1,5 @@
-﻿using System;
+﻿using parking_lib;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Web.Http;
@@ -7,15 +8,17 @@ namespace parking_api.Controllers
 {
     public class ParkinginfoController : ApiController
     {
+        DBHelper dBHelper = new DBHelper(System.Configuration.ConfigurationManager.ConnectionStrings["DBConn"].ConnectionString.ToString());
+        List<ParkData> conditionPark = new List<ParkData>();
+        
         //利用area搜尋的API
         public List<ParkData> Get(string area)
         {
-            List<ParkData> conditionPark = new List<ParkData>();
-            SqlConnection conn = new SqlConnection("data source=LAPTOP-9CB9PVPB\\SQLEXPRESS; initial catalog = SYSTEX; user id = sa; password = 0000");
-            conn.Open();
-            string strSelect = "SELECT * FROM Parking where area ='" + area + "'";
-            SqlCommand cmd = new SqlCommand(strSelect, conn);
-            SqlDataReader dr = cmd.ExecuteReader();
+            string strSelect = "SELECT * FROM Parking where area = @area";
+            SqlParameter[] sqlParameter = new SqlParameter[] {
+                new SqlParameter("@area",area)
+            };
+            SqlDataReader dr = dBHelper.Excute(strSelect, sqlParameter);
             try
             {
                 while (dr.Read())
@@ -49,12 +52,8 @@ namespace parking_api.Controllers
         //利用經度、緯度、及距離搜尋的API
         public List<ParkData> Get(string lat, string lng, float distance)
         {
-            List<ParkData> conditionPark = new List<ParkData>();
-            SqlConnection conn = new SqlConnection("data source=LAPTOP-9CB9PVPB\\SQLEXPRESS; initial catalog = SYSTEX; user id = sa; password = 0000");
-            conn.Open();
             string strSelect = "SELECT * FROM Parking;";
-            SqlCommand cmd = new SqlCommand(strSelect, conn);
-            SqlDataReader dr = cmd.ExecuteReader();
+            SqlDataReader dr = dBHelper.Excute(strSelect);
             try
             {
                 while (dr.Read())
