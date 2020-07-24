@@ -8,3 +8,5 @@ C:\Users\user\Source\Repos\parking_practice\parking_practice\obj\Debug\parking_p
 C:\Users\user\Source\Repos\parking_practice\parking_practice\bin\Debug\Newtonsoft.Json.dll
 C:\Users\user\Source\Repos\parking_practice\parking_practice\bin\Debug\Newtonsoft.Json.xml
 C:\Users\user\Source\Repos\parking_practice\parking_practice\obj\Debug\parking_practice.csproj.CopyComplete
+C:\Users\user\Source\Repos\parking_practice\parking_practice\bin\Debug\parking_lib.dll
+C:\Users\user\Source\Repos\parking_practice\parking_practice\bin\Debug\parking_lib.pdb

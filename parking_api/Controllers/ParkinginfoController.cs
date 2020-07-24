@@ -8,9 +8,8 @@ namespace parking_api.Controllers
 {
     public class ParkinginfoController : ApiController
     {
-        DBHelper dBHelper = new DBHelper(System.Configuration.ConfigurationManager.ConnectionStrings["DBConn"].ConnectionString.ToString());
+        DBHelper dBHelper = new DBHelper(GetDBConnectionString());
         List<ParkData> conditionPark = new List<ParkData>();
-        
         //利用area搜尋的API
         public List<ParkData> Get(string area)
         {
@@ -18,7 +17,7 @@ namespace parking_api.Controllers
             SqlParameter[] sqlParameter = new SqlParameter[] {
                 new SqlParameter("@area",area)
             };
-            SqlDataReader dr = dBHelper.Excute(strSelect, sqlParameter);
+            SqlDataReader dr = dBHelper.Query(strSelect, sqlParameter);
             try
             {
                 while (dr.Read())
@@ -53,7 +52,7 @@ namespace parking_api.Controllers
         public List<ParkData> Get(string lat, string lng, float distance)
         {
             string strSelect = "SELECT * FROM Parking;";
-            SqlDataReader dr = dBHelper.Excute(strSelect);
+            SqlDataReader dr = dBHelper.Query(strSelect);
             try
             {
                 while (dr.Read())
@@ -99,6 +98,11 @@ namespace parking_api.Controllers
                 ) * 6378.137);
             s = (float)(Math.Round(s * 10000) / 10000);
             return s;
+        }
+
+        private static string GetDBConnectionString()
+        {
+            return System.Configuration.ConfigurationManager.ConnectionStrings["DBConn"].ConnectionString.ToString();
         }
     }
 }
