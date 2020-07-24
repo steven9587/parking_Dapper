@@ -28,6 +28,7 @@ namespace parking_practice
             finally
             {
                 dr.Close();
+                dBHelper.Dispose();
             }
             //讀取線上即時資料
             for (int i = 0; i < 2; i++)
@@ -120,6 +121,7 @@ namespace parking_practice
                     finally
                     {
                         //cmd.Cancel();
+                        dBHelper.Dispose();
                     }
                 }
                 Console.WriteLine("======================================================================================================================");

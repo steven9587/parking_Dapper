@@ -10,6 +10,9 @@ namespace parking_lib
     public class DBHelper
     {
         private string CONN_STRIN = string.Empty;
+        private SqlConnection conn = null;
+        private SqlCommand cmd = null;
+
         public DBHelper(string strConnString)
         {
             CONN_STRIN = strConnString;
@@ -18,9 +21,9 @@ namespace parking_lib
         //讀取庫資料中的資料 => select
         public SqlDataReader Query(string strCommand, SqlParameter[] sqlParameter = null)
         {
-            SqlConnection conn = new SqlConnection(CONN_STRIN);
+            conn = new SqlConnection(CONN_STRIN);
             conn.Open();
-            SqlCommand cmd = new SqlCommand(strCommand, conn);
+            cmd = new SqlCommand(strCommand, conn);
             //若有參數要塞在執行
             if (sqlParameter != null)
             {
@@ -30,20 +33,26 @@ namespace parking_lib
             return dr;
         }
 
+        public void Dispose()
+        {
+            cmd.Cancel();
+            conn.Close();
+        }
+
         //寫資料入庫資料 => insert、update、delete
         public int Excute(string strCommand, SqlParameter[] sqlParameter = null)
         {
-            SqlConnection conn = new SqlConnection(CONN_STRIN);
+            conn = new SqlConnection(CONN_STRIN);
             conn.Open();
-            SqlCommand cmd = new SqlCommand(strCommand, conn);
+            cmd = new SqlCommand(strCommand, conn);
             //若有參數要塞在執行
             if (sqlParameter != null)
             {
                 cmd.Parameters.AddRange(sqlParameter);
             }
             int count = cmd.ExecuteNonQuery();
-            cmd.Cancel();
-            conn.Close();
+            //cmd.Cancel();
+            //conn.Close();
             return count;
         }
     }
