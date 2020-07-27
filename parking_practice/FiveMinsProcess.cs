@@ -8,11 +8,8 @@ using System.Threading.Tasks;
 
 namespace parking_practice
 {
-    class Program
+    public class FiveMinsProcess
     {
-        static async Task Main(string[] args)
-        {
-            await Task.Run(async () => { await DailyProcess.DoWork(); });
-        }
+
     }
 }

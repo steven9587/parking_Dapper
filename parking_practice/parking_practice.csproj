@@ -47,6 +47,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DailyProcess.cs" />
+    <Compile Include="FiveMinsProcess.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="Park.cs" />
     <Compile Include="Program.cs" />
