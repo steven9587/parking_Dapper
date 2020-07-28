@@ -20,5 +20,6 @@ namespace parking_api.Controllers
         public string Id { get; set; }
         public string Tel { get; set; }
         public string UpdateTime { get; set; }
+        public string ParkingSpace { get; set; }
     }
 }

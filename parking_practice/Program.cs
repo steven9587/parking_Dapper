@@ -11,10 +11,12 @@ namespace parking_practice
         {
             //DailyTimer
             Timer dailyTimer = new Timer(24 * 60 * 60 * 1000);
+            //Timer dailyTimer = new Timer(5 * 1000);
             dailyTimer.Elapsed += DailyEvent;
             dailyTimer.Enabled = true;
             //FiveMinsTimer
             Timer fiveMinsTimer = new Timer(5 * 60 * 1000);
+            //Timer fiveMinsTimer = new Timer(7 * 1000);
             fiveMinsTimer.Elapsed += FiveMinsEvent;
             fiveMinsTimer.Enabled = true;
             //

@@ -1,7 +1,10 @@
-﻿using parking_lib;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
+using parking_lib;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Web.Http;
 
 namespace parking_api.Controllers
@@ -37,7 +40,8 @@ namespace parking_api.Controllers
                         Summary = dr[9].ToString(),
                         Id = dr[10].ToString(),
                         Tel = dr[11].ToString(),
-                        UpdateTime = dr[12].ToString()
+                        UpdateTime = dr[12].ToString(),
+                        ParkingSpace = ParkingSpace(dr[10].ToString())
                     });
                 }
             }
@@ -74,7 +78,8 @@ namespace parking_api.Controllers
                             Summary = dr[9].ToString(),
                             Id = dr[10].ToString(),
                             Tel = dr[11].ToString(),
-                            UpdateTime = dr[12].ToString()
+                            UpdateTime = dr[12].ToString(),
+                            ParkingSpace = ParkingSpace(dr[10].ToString())
                         });
                     }
                 }
@@ -103,6 +108,37 @@ namespace parking_api.Controllers
         private static string GetDBConnectionString()
         {
             return System.Configuration.ConfigurationManager.ConnectionStrings["DBConn"].ConnectionString.ToString();
+        }
+
+        public string ParkingSpace(string id)
+        {
+            string ParkingSpace = "NULL";
+            List<ParkingSpaceData> parkingSpaceData = new List<ParkingSpaceData>();
+            var client = new MongoClient("mongodb://localhost:27017");
+            var database = client.GetDatabase("SYSTEX");
+            var collec = database.GetCollection<BsonDocument>("Parking");
+            var filter = Builders<BsonDocument>.Filter.Empty;
+            var projection = Builders<BsonDocument>.Projection.Include("id").Include("availableCar").Exclude("_id");
+            var documents = collec.Find(filter).Project(projection).ToList();
+
+            //linQ寫法
+            ParkingSpace = documents
+                .Where(x => x.GetElement(0).Value.ToString() == id)
+                .Select(p => p.GetElement(1).Value.ToString())
+                .FirstOrDefault();
+            
+            //迴圈寫法
+            //foreach (var data in documents)
+            //{
+            //    string parkingId = data.GetElement(0).Value.ToString();
+            //    string availableCar = data.GetElement(1).Value.ToString();
+            //    //parkingSpaceData.Add(new ParkingSpaceData() { Id = parkingId, AvailableCar = availableCar });
+            //    if (id == parkingId)
+            //    {
+            //        ParkingSpace = availableCar;
+            //    }
+            //}
+            return ParkingSpace;
         }
     }
 }
