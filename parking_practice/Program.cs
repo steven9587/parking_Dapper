@@ -13,6 +13,7 @@ namespace parking_practice
         static async Task Main(string[] args)
         {
             await Task.Run(async () => { await DailyProcess.DoWork(); });
+            await Task.Run(async () => { await FiveMinsProcess.DoWork(); });
         }
     }
 }
