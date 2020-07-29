@@ -110,10 +110,10 @@ namespace parking_api.Controllers
             return System.Configuration.ConfigurationManager.ConnectionStrings["DBConn"].ConnectionString.ToString();
         }
 
+        //利用id查詢該停車場還剩下多少空車位
         public string ParkingSpace(string id)
         {
             string ParkingSpace = "NULL";
-            List<ParkingSpaceData> parkingSpaceData = new List<ParkingSpaceData>();
             var client = new MongoClient("mongodb://localhost:27017");
             var database = client.GetDatabase("SYSTEX");
             var collec = database.GetCollection<BsonDocument>("Parking");
@@ -121,7 +121,7 @@ namespace parking_api.Controllers
             var projection = Builders<BsonDocument>.Projection.Include("id").Include("availableCar").Exclude("_id");
             var documents = collec.Find(filter).Project(projection).ToList();
 
-            //linQ寫法
+            //linQ寫法 => 效能upup
             ParkingSpace = documents
                 .Where(x => x.GetElement(0).Value.ToString() == id)
                 .Select(p => p.GetElement(1).Value.ToString())
