@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using Dapper;
+using Newtonsoft.Json;
 using parking_lib;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -10,31 +12,29 @@ namespace parking_practice
 {
     public class DailyProcess
     {
-
         public static async Task DoWork()
         {
-            //讀取原本DB資料   
-            DBHelper dBHelper = new DBHelper(GetDBConnectionString());
-            List<Location> location = new List<Location>();
-            string strSelect = "SELECT latitude,longitude FROM parking";
-            SqlDataReader dr = dBHelper.Query(strSelect);
+            //讀取原本DB資料的經度&緯度   
+            SqlConnection conn = new SqlConnection(GetDBConnectionString());
+            List<LocationData> location = new List<LocationData>();
             try
             {
-                while (dr.Read())
-                {
-                    //將所讀取到的經度&緯度存入list中
-                    location.Add(new Location() { Latitude = (float)Convert.ToDouble(dr[0]), Longitude = (float)Convert.ToDouble(dr[1]) });
-                }
+                conn.Open();
+                location = conn.Query<LocationData>("SELECT * FROM Parking;").ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
             finally
             {
-                dr.Close();
-                dBHelper.Dispose();
+                conn.Close();
             }
-            //讀取線上即時資料
+
             for (int i = 0; i < 2; i++)
             {
-                dBHelper = new DBHelper(GetDBConnectionString());
+                //DBHelper dBHelper = new DBHelper(GetDBConnectionString());
+                //conn = new SqlConnection(GetDBConnectionString());
                 string strCommand = string.Empty;
                 var temp = await GetRequest("https://data.ntpc.gov.tw/api/datasets/B1464EF0-9C7C-4A6F-ABF7-6BDF32847E68/json?page=" + i + "&size=1000");
                 //將一大串json字串切割成一筆一筆的
@@ -70,20 +70,6 @@ namespace parking_practice
                         }
                     }
 
-                    //將該筆資料放入DB中(更新or新增)
-                    if (exist)
-                    {
-                        //資料已存在 => 更新
-                        strCommand = @"UPDATE Parking SET name = @name, area = @area, address = @address,serviceTime = @serviceTime,payInfo = @payInfo,
-                                        totalCar = @totalCar,totalMotor = @totalMotor,summary = @summary,id = @id,tel = @tel,updateTime = @updateTime 
-                                        WHERE latitude=@latitude and longitude = @longitude;";
-                    }
-                    else
-                    {
-                        //資料不存在 => 加入資料庫
-                        strCommand = @"INSERT INTO Parking(latitude, longitude, name,area,address,serviceTime,payInfo,totalCar,totalMotor,summary,id,tel,updateTime)
-                                        VALUES (@latitude, @longitude, @name,@area,@address,@serviceTime,@payInfo,@totalCar,@totalMotor,@summary,@id,@tel,@updateTime)";
-                    }
                     try
                     {
                         if (payEx == null)
@@ -97,6 +83,20 @@ namespace parking_practice
                         if (tel == null)
                         {
                             tel = "NULL";
+                        }
+                        //將該筆資料放入DB中(更新or新增)
+                        if (exist)
+                        {
+                            //資料已存在 => 更新
+                            strCommand = @"UPDATE Parking SET name = @name, area = @area, address = @address,serviceTime = @serviceTime,payInfo = @payInfo,
+                                        totalCar = @totalCar,totalMotor = @totalMotor,summary = @summary,id = @id,tel = @tel,updateTime = @updateTime 
+                                        WHERE latitude=@latitude and longitude = @longitude;";
+                        }
+                        else
+                        {
+                            //資料不存在 => 加入資料庫
+                            strCommand = @"INSERT INTO Parking(latitude, longitude, name,area,address,serviceTime,payInfo,totalCar,totalMotor,summary,id,tel,updateTime)
+                                        VALUES (@latitude, @longitude, @name,@area,@address,@serviceTime,@payInfo,@totalCar,@totalMotor,@summary,@id,@tel,@updateTime)";
                         }
                         SqlParameter[] sqlParameter = new SqlParameter[] {
                             new SqlParameter("@latitude",latitude),
@@ -113,7 +113,11 @@ namespace parking_practice
                             new SqlParameter("@tel",tel),
                             new SqlParameter("@updateTime",time)
                         };
-                        dBHelper.Excute(strCommand, sqlParameter);
+                        conn.Open();
+                        SqlCommand cmd = new SqlCommand(strCommand, conn);
+                        cmd.Parameters.AddRange(sqlParameter);
+                        cmd.ExecuteNonQuery();
+                        //dBHelper.Excute(strCommand, sqlParameter);
                     }
                     catch (SqlException e)
                     {
@@ -121,12 +125,10 @@ namespace parking_practice
                     }
                     finally
                     {
-                        //cmd.Cancel();
-                        dBHelper.Dispose();
+                        conn.Close();
                     }
                 }
                 Console.WriteLine("======================================================================================================================");
-                //conn.Close();
             }
             Console.ReadKey();
         }

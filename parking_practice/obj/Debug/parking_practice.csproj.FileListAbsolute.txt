@@ -27,3 +27,5 @@ C:\Users\user\Source\Repos\parking_practice\parking_practice\bin\Debug\MongoDB.D
 C:\Users\user\Source\Repos\parking_practice\parking_practice\bin\Debug\MongoDB.Driver.Core.xml
 C:\Users\user\Source\Repos\parking_practice\parking_practice\bin\Debug\Snappy.NET.xml
 C:\Users\user\Source\Repos\parking_practice\parking_practice\bin\Debug\System.Buffers.xml
+C:\Users\user\Source\Repos\parking_practice\parking_practice\bin\Debug\Dapper.dll
+C:\Users\user\Source\Repos\parking_practice\parking_practice\bin\Debug\Dapper.xml

@@ -86,6 +86,7 @@
   <ItemGroup>
     <Compile Include="DailyProcess.cs" />
     <Compile Include="FiveMinsProcess.cs" />
+    <Compile Include="LocationData.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="Park.cs" />
     <Compile Include="ParkingSpace.cs" />

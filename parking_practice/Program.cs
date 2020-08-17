@@ -10,7 +10,8 @@ namespace parking_practice
         static async Task Main(string[] args)
         {
             //DailyTimer
-            Timer dailyTimer = new Timer(24 * 60 * 60 * 1000);
+            //Timer dailyTimer = new Timer(24 * 60 * 60 * 1000);
+            Timer dailyTimer = new Timer(10 * 1000);
             //Timer dailyTimer = new Timer(5 * 1000);
             dailyTimer.Elapsed += DailyEvent;
             dailyTimer.Enabled = true;
