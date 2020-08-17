@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using Dapper;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using parking_lib;
 using System;
@@ -11,43 +12,22 @@ namespace parking_api.Controllers
 {
     public class ParkinginfoController : ApiController
     {
-        DBHelper dBHelper = new DBHelper(GetDBConnectionString());
+        SqlConnection conn = new SqlConnection(GetDBConnectionString());
         List<ParkData> conditionPark = new List<ParkData>();
-        //利用area搜尋的API
+        List<LocationData> location = new List<LocationData>();
+        //利用area搜尋的API (Dapper寫法)
         public List<ParkData> Get(string area)
         {
-            string strSelect = "SELECT * FROM Parking where area = @area";
-            SqlParameter[] sqlParameter = new SqlParameter[] {
-                new SqlParameter("@area",area)
-            };
-            SqlDataReader dr = dBHelper.Query(strSelect, sqlParameter);
             try
             {
-                while (dr.Read())
-                {
-                    //將所讀取到的該筆資料存入list中
-                    conditionPark.Add(new ParkData()
-                    {
-                        Twd97X = (float)Convert.ToDouble(dr[0]),
-                        Twd97Y = (float)Convert.ToDouble(dr[1]),
-                        Name = dr[2].ToString(),
-                        Area = dr[3].ToString(),
-                        Address = dr[4].ToString(),
-                        ServiceTime = dr[5].ToString(),
-                        PayEx = dr[6].ToString(),
-                        TotalCar = dr[7].ToString(),
-                        TotalMotor = dr[8].ToString(),
-                        Summary = dr[9].ToString(),
-                        Id = dr[10].ToString(),
-                        Tel = dr[11].ToString(),
-                        UpdateTime = dr[12].ToString(),
-                        ParkingSpace = ParkingSpace(dr[10].ToString())
-                    });
-                }
+                conn.Open();
+                conditionPark = conn.Query<ParkData>("SELECT * FROM Parking where area = @Area",
+                                        new { Area = area }).ToList();
+                conn.Close();
             }
-            finally
+            catch (Exception ex)
             {
-                dr.Close();
+                Console.WriteLine(ex.Message);
             }
             return conditionPark;
         }
@@ -55,38 +35,25 @@ namespace parking_api.Controllers
         //利用經度、緯度、及距離搜尋的API
         public List<ParkData> Get(string lat, string lng, float distance)
         {
-            string strSelect = "SELECT * FROM Parking;";
-            SqlDataReader dr = dBHelper.Query(strSelect);
             try
             {
-                while (dr.Read())
+                //先撈出所有經度&緯度
+                conn.Open();
+                location = conn.Query<LocationData>("SELECT * FROM Parking;").ToList();
+                //一一比對每組經度&緯度，若在範圍內就存入list中
+                foreach (var loc in location)
                 {
-                    if (distance >= DistanceOfTwoPoints(Convert.ToSingle(lat), Convert.ToSingle(lng), (float)Convert.ToDouble(dr[0]), (float)Convert.ToDouble(dr[1])))
+                    if (distance >= DistanceOfTwoPoints(Convert.ToSingle(lat), Convert.ToSingle(lng), (float)Convert.ToDouble(loc.Latitude), (float)Convert.ToDouble(loc.Longitude)))
                     {
-                        //將所讀取到且符合距離的該筆資料存入list中
-                        conditionPark.Add(new ParkData()
-                        {
-                            Twd97X = (float)Convert.ToDouble(dr[0]),
-                            Twd97Y = (float)Convert.ToDouble(dr[1]),
-                            Name = dr[2].ToString(),
-                            Area = dr[3].ToString(),
-                            Address = dr[4].ToString(),
-                            ServiceTime = dr[5].ToString(),
-                            PayEx = dr[6].ToString(),
-                            TotalCar = dr[7].ToString(),
-                            TotalMotor = dr[8].ToString(),
-                            Summary = dr[9].ToString(),
-                            Id = dr[10].ToString(),
-                            Tel = dr[11].ToString(),
-                            UpdateTime = dr[12].ToString(),
-                            ParkingSpace = ParkingSpace(dr[10].ToString())
-                        });
+                        conditionPark.AddRange(conn.Query<ParkData>("SELECT * FROM Parking where latitude = @Lat and longitude = @Lon",
+                                            new { Lat = loc.Latitude, Lon = loc.Longitude }).ToList());
                     }
                 }
+                conn.Close();
             }
-            finally
+            catch (Exception ex)
             {
-                dr.Close();
+                Console.WriteLine(ex.Message);
             }
             return conditionPark;
         }
@@ -126,7 +93,7 @@ namespace parking_api.Controllers
                 .Where(x => x.GetElement(0).Value.ToString() == id)
                 .Select(p => p.GetElement(1).Value.ToString())
                 .FirstOrDefault();
-            
+
             //迴圈寫法
             //foreach (var data in documents)
             //{

@@ -7,8 +7,10 @@ namespace parking_api.Controllers
 {
     public class ParkData
     {
-        public float Twd97X { get; set; }
-        public float Twd97Y { get; set; }
+        public float Latitude { get; set; }
+        //public float Twd97X { get; set; }
+        public float Longitude { get; set; }
+        //public float Twd97Y { get; set; }
         public string Name { get; set; }
         public string Area { get; set; }
         public string Address { get; set; }

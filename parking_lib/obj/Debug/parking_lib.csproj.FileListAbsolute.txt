@@ -22,3 +22,5 @@ C:\Users\user\Source\Repos\parking_practice\parking_lib\bin\Debug\MongoDB.Driver
 C:\Users\user\Source\Repos\parking_practice\parking_lib\bin\Debug\Snappy.NET.xml
 C:\Users\user\Source\Repos\parking_practice\parking_lib\bin\Debug\System.Buffers.xml
 C:\Users\user\Source\Repos\parking_practice\parking_lib\obj\Debug\parking_lib.csproj.CopyComplete
+C:\Users\user\Source\Repos\parking_practice\parking_lib\bin\Debug\Dapper.dll
+C:\Users\user\Source\Repos\parking_practice\parking_lib\bin\Debug\Dapper.xml

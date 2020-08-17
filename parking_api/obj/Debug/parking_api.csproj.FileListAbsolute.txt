@@ -112,3 +112,5 @@ C:\Users\user\Source\Repos\parking_practice\parking_api\bin\MongoDB.Driver.xml
 C:\Users\user\Source\Repos\parking_practice\parking_api\bin\MongoDB.Driver.Core.xml
 C:\Users\user\Source\Repos\parking_practice\parking_api\bin\Snappy.NET.xml
 C:\Users\user\Source\Repos\parking_practice\parking_api\bin\System.Buffers.xml
+C:\Users\user\Source\Repos\parking_practice\parking_api\bin\Dapper.dll
+C:\Users\user\Source\Repos\parking_practice\parking_api\bin\Dapper.xml
