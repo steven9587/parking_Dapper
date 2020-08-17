@@ -32,7 +32,7 @@ namespace parking_api.Controllers
             return conditionPark;
         }
 
-        //利用經度、緯度、及距離搜尋的API
+        //利用經度、緯度、及距離搜尋的API (Dapper寫法)
         public List<ParkData> Get(string lat, string lng, float distance)
         {
             try
