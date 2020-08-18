@@ -33,8 +33,6 @@ namespace parking_practice
 
             for (int i = 0; i < 2; i++)
             {
-                //DBHelper dBHelper = new DBHelper(GetDBConnectionString());
-                //conn = new SqlConnection(GetDBConnectionString());
                 string strCommand = string.Empty;
                 var temp = await GetRequest("https://data.ntpc.gov.tw/api/datasets/B1464EF0-9C7C-4A6F-ABF7-6BDF32847E68/json?page=" + i + "&size=1000");
                 //將一大串json字串切割成一筆一筆的
@@ -96,28 +94,13 @@ namespace parking_practice
                         {
                             //資料不存在 => 加入資料庫
                             strCommand = @"INSERT INTO Parking(latitude, longitude, name,area,address,serviceTime,payInfo,totalCar,totalMotor,summary,id,tel,updateTime)
-                                        VALUES (@latitude, @longitude, @name,@area,@address,@serviceTime,@payInfo,@totalCar,@totalMotor,@summary,@id,@tel,@updateTime)";
+                                        VALUES (@Latitude, @Longitude, @Name,@Area,@Address,@ServiceTime,@PayInfo,@TotalCar,@TotalMotor,@Summary,@Id,@Tel,@UpdateTime)";
                         }
-                        SqlParameter[] sqlParameter = new SqlParameter[] {
-                            new SqlParameter("@latitude",latitude),
-                            new SqlParameter("@longitude",longitude),
-                            new SqlParameter("@name",name),
-                            new SqlParameter("@area",area),
-                            new SqlParameter("@address",address),
-                            new SqlParameter("@serviceTime",serviceTime),
-                            new SqlParameter("@payInfo",payEx),
-                            new SqlParameter("@totalCar",totalCar),
-                            new SqlParameter("@totalMotor",totalMotor),
-                            new SqlParameter("@summary",summary),
-                            new SqlParameter("@id",id),
-                            new SqlParameter("@tel",tel),
-                            new SqlParameter("@updateTime",time)
-                        };
+                        var datas = new[]{ new { Latitude = latitude, Longitude = longitude, Name = name, Area = area, Address = address, ServiceTime = serviceTime,
+                            PayInfo = payEx, TotalCar = totalCar, TotalMotor = totalMotor, Summary = summary, Id = id, Tel = tel, UpdateTime = time } };
+                        
                         conn.Open();
-                        SqlCommand cmd = new SqlCommand(strCommand, conn);
-                        cmd.Parameters.AddRange(sqlParameter);
-                        cmd.ExecuteNonQuery();
-                        //dBHelper.Excute(strCommand, sqlParameter);
+                        conn.Execute(strCommand, datas);
                     }
                     catch (SqlException e)
                     {
